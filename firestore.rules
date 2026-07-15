@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net: Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+
+    // Validation Blueprint for RSVP submissions
+    function isValidRsvp(data) {
+      return data.keys().hasAll(['firstName', 'lastName', 'attending', 'createdAt'])
+        && data.keys().size() == 4
+        && data.firstName is string
+        && data.firstName.size() > 0
+        && data.firstName.size() <= 100
+        && data.lastName is string
+        && data.lastName.size() > 0
+        && data.lastName.size() <= 100
+        && (data.attending == 'si' || data.attending == 'no')
+        && data.createdAt == request.time;
+    }
+
+    match /rsvps/{rsvpId} {
+      // Allow any guest to submit their RSVP with rigorous structural validation
+      allow create: if isValidId(rsvpId) && isValidRsvp(request.resource.data);
+      
+      // Allow single document lookups to prevent duplicates, but block listing, updating, or deleting
+      allow get: if isValidId(rsvpId);
+      allow list, update, delete: if false;
+    }
+  }
+}

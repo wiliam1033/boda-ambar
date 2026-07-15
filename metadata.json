@@ -1,0 +1,8 @@
+{
+  "name": "Geiver & Ambar - Boda",
+  "description": "Invitación virtual de boda interactiva con temática de mariposas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "entities": {
+    "rsvp": {
+      "title": "RSVP",
+      "description": "RSVP submission from a guest containing their name, last name, and attendance status.",
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "First name of the guest."
+        },
+        "lastName": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Last name of the guest."
+        },
+        "attending": {
+          "type": "string",
+          "enum": ["si", "no"],
+          "description": "Attendance choice (si or no)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp of when the response was submitted."
+        }
+      },
+      "required": ["firstName", "lastName", "attending", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/rsvps/{rsvpId}": {
+      "schema": "rsvp",
+      "description": "Wedding RSVP guest responses."
+    }
+  }
+}
